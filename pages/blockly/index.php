@@ -1,4 +1,5 @@
 <?php
+
 use \system\classes\Core;
 use \system\classes\Configuration;
 use \system\packages\ros\ROS;
@@ -11,47 +12,47 @@ $vehicle_name = Duckiebot::getDuckiebotName();
 ?>
 
 <style type="text/css">
-body > #page_container{
-  min-width: 96%;
-}
+  body>#page_container {
+    min-width: 96%;
+  }
 
-body > #page_container > #page_canvas{
-  margin-bottom: 0;
-}
+  body>#page_container>#page_canvas {
+    margin-bottom: 0;
+  }
 
-.btn-static {
-  /* background-color: white; */
-  border: 1px solid lightgrey;
-  cursor: default;
-}
+  .btn-static {
+    /* background-color: white; */
+    border: 1px solid lightgrey;
+    cursor: default;
+  }
 
-.btn-static:active {
-  -moz-box-shadow:    inset 0 0 0px white;
-  -webkit-box-shadow: inset 0 0 0px white;
-  box-shadow:         inset 0 0 0px white;
-}
+  .btn-static:active {
+    -moz-box-shadow: inset 0 0 0px white;
+    -webkit-box-shadow: inset 0 0 0px white;
+    box-shadow: inset 0 0 0px white;
+  }
 
-.panel > .panel-heading a{
-  color: inherit;
-  text-decoration: none;
-}
+  .panel>.panel-heading a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-.ros-topic-status{
-  display: inline-block;
-  margin: 0 4px;
-  font-size: 15px;
-  padding-right: 10px;
-  border-right: 1px solid lightgrey;
-}
+  .ros-topic-status {
+    display: inline-block;
+    margin: 0 4px;
+    font-size: 15px;
+    padding-right: 10px;
+    border-right: 1px solid lightgrey;
+  }
 
-.ros-topic-status .fa{
-  font-size: 18px;
-}
+  .ros-topic-status .fa {
+    font-size: 18px;
+  }
 
-#ros_topic_status_container .ros-topic-status:last-child{
-  padding-right: 0;
-  border-right: none;
-}
+  #ros_topic_status_container .ros-topic-status:last-child {
+    padding-right: 0;
+    border-right: none;
+  }
 </style>
 
 <!-- Include Blocky -->
@@ -157,50 +158,49 @@ ROS::connect();
 ?>
 
 <?php
-include __DIR__.'/toolbox.xml';
+include __DIR__ . '/toolbox.xml';
 ?>
 
 <script type="text/javascript">
-
   window.ros_resources = {
-    camera : {
-      topic_name : '<?php echo $vehicle_name ?>/camera_node/image/compressed',
-      messageType : 'sensor_msgs/CompressedImage',
-      queue_size : 1,
-      frequency : 8
+    camera: {
+      topic_name: '<?php echo $vehicle_name ?>/camera_node/image/compressed',
+      messageType: 'sensor_msgs/CompressedImage',
+      queue_size: 1,
+      frequency: 8
     },
-    commands : {
-      topic_name : '<?php echo $vehicle_name ?>/car_interface/car_cmd',
-      messageType : 'duckietown_msgs/Twist2DStamped',
-      queue_size : 1,
-      frequency : 10
+    commands: {
+      topic_name: '<?php echo $vehicle_name ?>/car_interface/car_cmd',
+      messageType: 'duckietown_msgs/Twist2DStamped',
+      queue_size: 1,
+      frequency: 10
     },
-    supercamera : {
-      topic_name : '<?php echo $vehicle_name ?>/histogram_perception/histogram',
-      messageType : 'std_msgs/String',
-      queue_size : 1,
-      frequency : 10
+    supercamera: {
+      topic_name: '<?php echo $vehicle_name ?>/histogram_perception/histogram',
+      messageType: 'std_msgs/String',
+      queue_size: 1,
+      frequency: 10
     }
   };
 
   window.blockly_requires = [];
   window.blockly_provides = [];
 
-  $(document).on('<?php echo ROS::$ROSBRIDGE_CONNECTED ?>', function(evt){
+  $(document).on('<?php echo ROS::$ROSBRIDGE_CONNECTED ?>', function(evt) {
     ExecutionLogicModule.set_current_status(
       ExecutionLogicModule.STATUS.COMPLETED
     );
     $('#ros_bridge_status_icon').css('color', 'green');
   });
 
-  $(document).on('<?php echo ROS::$ROSBRIDGE_ERROR ?>', function(evt, error){
+  $(document).on('<?php echo ROS::$ROSBRIDGE_ERROR ?>', function(evt, error) {
     ExecutionLogicModule.set_current_status(
       ExecutionLogicModule.STATUS.COMPLETED
     );
     $('#ros_bridge_status_icon').css('color', 'orangered');
   });
 
-  $(document).on('<?php echo ROS::$ROSBRIDGE_CLOSED ?>', function(evt){
+  $(document).on('<?php echo ROS::$ROSBRIDGE_CLOSED ?>', function(evt) {
     ExecutionLogicModule.set_current_status(
       ExecutionLogicModule.STATUS.NOT_CONNECTED
     );
@@ -217,8 +217,7 @@ include __DIR__.'/toolbox.xml';
   var blocklyArea = document.getElementById('blocklyArea');
   var blocklyDiv = document.getElementById('blocklyDiv');
   window.blockly_ws = Blockly.inject(
-    blocklyDiv,
-    {
+    blocklyDiv, {
       toolbox: document.getElementById('toolbox'),
       scrollbars: true,
       rtl: false,
@@ -264,28 +263,28 @@ include __DIR__.'/toolbox.xml';
   onresize();
   Blockly.svgResize(window.blockly_ws);
 
-  function restorelocal(){
+  function restorelocal() {
     var xml_text = localStorage.getItem("blocks_cache");
     try {
       var xml = Blockly.Xml.textToDom(xml_text);
       Blockly.Xml.domToWorkspace(window.blockly_ws, xml);
-      window.blockly_ws.getAllBlocks().forEach(function(block){
+      window.blockly_ws.getAllBlocks().forEach(function(block) {
         block.setDeletable(true);
         block.setMovable(true);
         try {
           block.setEditable(true);
-        }catch(e){}
+        } catch (e) {}
       });
       automate_localstorage();
-    }catch(err){
+    } catch (err) {
       automate_localstorage();
     }
-  }//restorelocal
+  } //restorelocal
 
-  function automate_localstorage(){
+  function automate_localstorage() {
     localstorage();
     setTimeout(automate_localstorage, 1000);
-  }//automate_localstorage
+  } //automate_localstorage
 
   function localstorage() {
     // save stuff on local storage
@@ -293,26 +292,26 @@ include __DIR__.'/toolbox.xml';
     var xml_text = Blockly.Xml.domToText(xml);
     localStorage.setItem("blocks_cache", xml_text);
     var xml_text_stored = localStorage.getItem("blocks_cache");
-  }//localstorage
+  } //localstorage
 
-  function clean_ws(){
+  function clean_ws() {
     openYesNoModal(
       'Are you sure you want to clean the workspace?<br/>All unsaved progress will be lost.',
       ExecutionLogicModule.clean_ws,
       true /*silentMode*/
     );
-  }//clean_ws
+  } //clean_ws
 
   function update_ros_status(event) {
     requires = [];
     provides = [];
-    window.blockly_ws.getAllBlocks().forEach(function(block){
-      if(block.hasOwnProperty('data')){
+    window.blockly_ws.getAllBlocks().forEach(function(block) {
+      if (block.hasOwnProperty('data')) {
         data = JSON.parse(block.data);
-        if(data.hasOwnProperty('requires')){
+        if (data.hasOwnProperty('requires')) {
           requires = requires.concat(requires, data['requires']);
         }
-        if(data.hasOwnProperty('provides')){
+        if (data.hasOwnProperty('provides')) {
           provides = provides.concat(provides, data['provides']);
         }
       }
@@ -373,14 +372,14 @@ include __DIR__.'/toolbox.xml';
       );
     }
     // ---
-    if( (requires.length + provides.length) == 0){
+    if ((requires.length + provides.length) == 0) {
       $('#ros_topic_status_container').html('(empty)');
     }
     window.blockly_requires = requires;
     window.blockly_provides = provides;
-  }//update_ros_status
+  } //update_ros_status
 
-  function update_data_status(){
+  function update_data_status() {
     // resources = $.merge(window.blockly_requires, window.blockly_provides);
     resources_list = [
       window.blockly_requires,
@@ -390,7 +389,7 @@ include __DIR__.'/toolbox.xml';
       'red',
       'black'
     ];
-    for (var j in resources_list){
+    for (var j in resources_list) {
       var resources = resources_list[j];
       var color = hz_0_colors[j];
       for (var i in resources) {
@@ -398,22 +397,22 @@ include __DIR__.'/toolbox.xml';
         var expected_hz = window.ros_resources[resource_name]['frequency'];
         var elem = $('#{0}-data-source-status'.format(resource_name));
         var hz = window.ROSDB.hz(resource_name);
-        if( hz >= 0.6 * expected_hz)
+        if (hz >= 0.6 * expected_hz)
           color = 'green';
-        if( hz > 0.4 * expected_hz && hz < 0.6 * expected_hz)
+        if (hz > 0.4 * expected_hz && hz < 0.6 * expected_hz)
           color = 'orange';
         elem.css('color', color);
         elem.prop('title', '{0} Hz'.format(hz.toFixed(2)));
       }
     }
-  }//update_data_status
+  } //update_data_status
 
   // restore at the beginning
   $(window).load(function() {
     restorelocal();
     window.blockly_ros_topics = {
-      'subscribed' : [],
-      'advertised' : []
+      'subscribed': [],
+      'advertised': []
     };
     window.blockly_ws.addChangeListener(update_ros_status);
 
@@ -482,21 +481,21 @@ include __DIR__.'/toolbox.xml';
 
 
 <?php
-if($DEBUG){
-  ?>
-  <br/>
+if ($DEBUG) {
+?>
+  <br />
   <textarea id="debug_code_textarea" style="width:100%; height:24vh; resize:none" readonly></textarea>
   <script type="text/javascript">
-  function show_code(event) {
-    var code = Blockly.JavaScript.workspaceToCode(window.blockly_ws);
-    document.getElementById('debug_code_textarea').value = code;
-  }
-  window.blockly_ws.addChangeListener(show_code);
+    function show_code(event) {
+      var code = Blockly.JavaScript.workspaceToCode(window.blockly_ws);
+      document.getElementById('debug_code_textarea').value = code;
+    }
+    window.blockly_ws.addChangeListener(show_code);
   </script>
-  <?php
+<?php
 }
 
-require_once __DIR__.'/../../../core/modules/modals/yes_no_modal.php';
+require_once __DIR__ . '/../../../core/modules/modals/yes_no_modal.php';
 ?>
 
 <!-- <canvas id="myCanvas" width="200" height="200"></canvas> -->
