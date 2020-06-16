@@ -76,15 +76,16 @@ $omega_gain *= $sensitivity;
       omega: omega_val * omega_gain
     });
     // publish message
+    console.log(car_cmd);
     window.mission_control_cmdVel.publish(car_cmd);
   } //publish_command
 
   // publish command at regular rate
-  $(document).on('<?php echo ROS::$ROSBRIDGE_CONNECTED ?>', function(e) {
+  $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_CONNECTED) ?>', function(e) {
     // define the output topic
     window.mission_control_cmdVel = new ROSLIB.Topic({
       ros: window.ros,
-      name: '/<?php echo $vehicle_name ?>/car_interface/car_cmd',
+      name: '/<?php echo $vehicle_name ?>/joy_mapper_node/car_cmd',
       messageType: 'duckietown_msgs/Twist2DStamped',
       queue_size: 1
     });

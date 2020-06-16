@@ -441,7 +441,7 @@ include __DIR__ . '/toolbox.xml';
   });
 
 
-  // $(document).on('<?php echo ROS::$ROSBRIDGE_CONNECTED ?>', function(evt){
+  // $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_CONNECTED) ?>', function(evt){
   //   let resource_name = 'supercamera';
   //   let resource = window.ros_resources[resource_name];
   //   // subscribe to superpixel camera
