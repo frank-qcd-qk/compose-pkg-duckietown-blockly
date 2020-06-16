@@ -1,12 +1,13 @@
 <?php
-function console_log($output, $with_script_tags = true) {
-    $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
-');';
+function console_log($output, $with_script_tags = true)
+{
+    $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) .
+        ');';
     if ($with_script_tags) {
         $js_code = '<script>' . $js_code . '</script>';
     }
     echo $js_code;
-}?>
+} ?>
 
 <?php
 
@@ -23,11 +24,11 @@ console_log("Obatined Duckiebot is: " . $vehicle_name);
 ?>
 
 <style type="text/css">
-    body > #page_container {
+    body>#page_container {
         min-width: 96%;
     }
 
-    body > #page_container > #page_canvas {
+    body>#page_container>#page_canvas {
         margin-bottom: 0;
     }
 
@@ -43,7 +44,7 @@ console_log("Obatined Duckiebot is: " . $vehicle_name);
         box-shadow: inset 0 0 0px white;
     }
 
-    .panel > .panel-heading a {
+    .panel>.panel-heading a {
         color: inherit;
         text-decoration: none;
     }
@@ -92,34 +93,27 @@ console_log("Obatined Duckiebot is: " . $vehicle_name);
     <tr>
         <td style="width:500px; min-width:500px; max-width:500px">
             <div class="btn-group btn-group-justified" role="group" style="margin:20px 0">
-                <a role="button" class="btn btn-default" id="launch_button" name="launch_button"
-                   onclick="ExecutionLogicModule.toggle_run();">
+                <a role="button" class="btn btn-default" id="launch_button" name="launch_button" onclick="ExecutionLogicModule.toggle_run();">
                     <i id="launch_button_icon" class="fa fa-spinner" aria-hidden="true"></i>
                     &nbsp;
                     <span id="launch_button_span">Connecting...</span>
                 </a>
-                <a role="button" class="btn btn-danger" id="end_button" name="end_button" href="#"
-                   onclick='ExecutionLogicModule.end_execution();' style="display:none;">
+                <a role="button" class="btn btn-danger" id="end_button" name="end_button" href="#" onclick='ExecutionLogicModule.end_execution();' style="display:none;">
                     <i class="fa fa-stop" aria-hidden="true"></i>
                     &nbsp;
                     Stop
                 </a>
-                <a role="button" class="btn btn-default" id="load_from_file_button"
-                   name="load_from_file_button" href="#"
-                   onclick='ExecutionLogicModule.load_from_file();'>
+                <a role="button" class="btn btn-default" id="load_from_file_button" name="load_from_file_button" href="#" onclick='ExecutionLogicModule.load_from_file();'>
                     <i class="fa fa-download" aria-hidden="true"></i>
                     &nbsp;
                     Load code
                 </a>
-                <a role="button" class="btn btn-default" id="save_to_file_button"
-                   name="save_to_file_button" href="#"
-                   onclick='ExecutionLogicModule.save_to_file();'>
+                <a role="button" class="btn btn-default" id="save_to_file_button" name="save_to_file_button" href="#" onclick='ExecutionLogicModule.save_to_file();'>
                     <i class="fa fa-upload" aria-hidden="true"></i>
                     &nbsp;
                     Save code
                 </a>
-                <a role="button" class="btn btn-warning" id="clean_ws_button"
-                   name="clean_ws_button" href="#" onclick='clean_ws();'>
+                <a role="button" class="btn btn-warning" id="clean_ws_button" name="clean_ws_button" href="#" onclick='clean_ws();'>
                     <i class="fa fa-eraser" aria-hidden="true"></i>
                     &nbsp;
                     Clean
@@ -128,20 +122,17 @@ console_log("Obatined Duckiebot is: " . $vehicle_name);
         </td>
         <td style="min-width:160px">
             <?php
-//            include_once "components/take_over.php";
+            //            include_once "components/take_over.php";
             ?>
         </td>
         <td style="width:100%">
-            <div class="panel panel-default"
-                 style="margin:20px 0 20px 40px; min-width:100px; float:right">
+            <div class="panel panel-default" style="margin:20px 0 20px 40px; min-width:100px; float:right">
                 <div class="panel-heading" role="tab" style="height:34px; padding-top: 6px;">
                     <table>
                         <tr>
                             <td>
                                 <strong>
-                                    <span class="glyphicon glyphicon-th"
-                                          id="ros_bridge_status_icon" aria-hidden="true"
-                                          style="color:red"></span>
+                                    <span class="glyphicon glyphicon-th" id="ros_bridge_status_icon" aria-hidden="true" style="color:red"></span>
                                     &nbsp;
                                     ROS:
                                     &nbsp;
@@ -183,7 +174,6 @@ include __DIR__ . '/toolbox.xml';
 ?>
 
 <script type="text/javascript">
-
     window.ros_resources = {
         camera: {
             topic_name: '/<?php echo $vehicle_name ?>/camera_node/image/compressed',
@@ -208,21 +198,21 @@ include __DIR__ . '/toolbox.xml';
     window.blockly_requires = [];
     window.blockly_provides = [];
 
-    $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_CONNECTED) ?>', function (evt) {
+    $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_CONNECTED) ?>', function(evt) {
         ExecutionLogicModule.set_current_status(
             ExecutionLogicModule.STATUS.COMPLETED
         );
         $('#ros_bridge_status_icon').css('color', 'green');
     });
 
-    $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_ERROR) ?>', function (evt, error) {
+    $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_ERROR) ?>', function(evt, error) {
         ExecutionLogicModule.set_current_status(
             ExecutionLogicModule.STATUS.COMPLETED
         );
         $('#ros_bridge_status_icon').css('color', 'orangered');
     });
 
-    $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_CLOSED) ?>', function (evt) {
+    $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_CLOSED) ?>', function(evt) {
         ExecutionLogicModule.set_current_status(
             ExecutionLogicModule.STATUS.NOT_CONNECTED
         );
@@ -239,8 +229,7 @@ include __DIR__ . '/toolbox.xml';
     var blocklyArea = document.getElementById('blocklyArea');
     var blocklyDiv = document.getElementById('blocklyDiv');
     window.blockly_ws = Blockly.inject(
-        blocklyDiv,
-        {
+        blocklyDiv, {
             toolbox: document.getElementById('toolbox'),
             scrollbars: true,
             rtl: false,
@@ -264,7 +253,7 @@ include __DIR__ . '/toolbox.xml';
         }
     );
 
-    var onresize = function (e) {
+    var onresize = function(e) {
         // Compute the absolute coordinates and dimensions of blocklyArea.
         var element = blocklyArea;
         var x = 0;
@@ -291,24 +280,23 @@ include __DIR__ . '/toolbox.xml';
         try {
             var xml = Blockly.Xml.textToDom(xml_text);
             Blockly.Xml.domToWorkspace(window.blockly_ws, xml);
-            window.blockly_ws.getAllBlocks().forEach(function (block) {
+            window.blockly_ws.getAllBlocks().forEach(function(block) {
                 block.setDeletable(true);
                 block.setMovable(true);
                 try {
                     block.setEditable(true);
-                } catch (e) {
-                }
+                } catch (e) {}
             });
             automate_localstorage();
         } catch (err) {
             automate_localstorage();
         }
-    }//restorelocal
+    } //restorelocal
 
     function automate_localstorage() {
         localstorage();
         setTimeout(automate_localstorage, 1000);
-    }//automate_localstorage
+    } //automate_localstorage
 
     function localstorage() {
         // save stuff on local storage
@@ -316,7 +304,7 @@ include __DIR__ . '/toolbox.xml';
         var xml_text = Blockly.Xml.domToText(xml);
         localStorage.setItem("blocks_cache", xml_text);
         var xml_text_stored = localStorage.getItem("blocks_cache");
-    }//localstorage
+    } //localstorage
 
     function clean_ws() {
         openYesNoModal(
@@ -324,12 +312,12 @@ include __DIR__ . '/toolbox.xml';
             ExecutionLogicModule.clean_ws,
             true /*silentMode*/
         );
-    }//clean_ws
+    } //clean_ws
 
     function update_ros_status(event) {
         requires = [];
         provides = [];
-        window.blockly_ws.getAllBlocks().forEach(function (block) {
+        window.blockly_ws.getAllBlocks().forEach(function(block) {
             if (block.hasOwnProperty('data')) {
                 data = JSON.parse(block.data);
                 if (data.hasOwnProperty('requires')) {
@@ -401,7 +389,7 @@ include __DIR__ . '/toolbox.xml';
         }
         window.blockly_requires = requires;
         window.blockly_provides = provides;
-    }//update_ros_status
+    } //update_ros_status
 
     function update_data_status() {
         // resources = $.merge(window.blockly_requires, window.blockly_provides);
@@ -429,10 +417,10 @@ include __DIR__ . '/toolbox.xml';
                 elem.prop('title', '{0} Hz'.format(hz.toFixed(2)));
             }
         }
-    }//update_data_status
+    } //update_data_status
 
     // restore at the beginning
-    $(window).load(function () {
+    $(window).load(function() {
         restorelocal();
         window.blockly_ros_topics = {
             'subscribed': [],
@@ -506,10 +494,9 @@ include __DIR__ . '/toolbox.xml';
 
 <?php
 if ($DEBUG) {
-    ?>
-    <br/>
-    <textarea id="debug_code_textarea" style="width:100%; height:24vh; resize:none"
-              readonly></textarea>
+?>
+    <br />
+    <textarea id="debug_code_textarea" style="width:100%; height:24vh; resize:none" readonly></textarea>
     <script type="text/javascript">
         function show_code(event) {
             let code = Blockly.JavaScript.workspaceToCode(window.blockly_ws);
@@ -518,7 +505,7 @@ if ($DEBUG) {
 
         window.blockly_ws.addChangeListener(show_code);
     </script>
-    <?php
+<?php
 }
 
 require_once $GLOBALS['__EMBEDDED__PACKAGES__DIR__'] . '/core/modules/modals/yes_no_modal.php';
