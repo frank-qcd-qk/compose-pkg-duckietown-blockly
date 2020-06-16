@@ -89,6 +89,7 @@ $omega_gain *= $sensitivity;
       messageType: 'duckietown_msgs/Twist2DStamped',
       queue_size: 1
     });
+    console.log(window.mission_control_cmdVel)
     // attach listeners to key events
     window.addEventListener("keyup", key_cb, false);
     window.addEventListener("keydown", key_cb, false);

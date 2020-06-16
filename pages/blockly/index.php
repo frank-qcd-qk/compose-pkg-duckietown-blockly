@@ -185,7 +185,7 @@ include __DIR__ . '/toolbox.xml';
       frequency: 8
     },
     commands: {
-      topic_name: '<?php echo $vehicle_name ?>/car_interface/car_cmd',
+      topic_name: '<?php echo $vehicle_name ?>/joy_mapper_node/car_cmd',
       messageType: 'duckietown_msgs/Twist2DStamped',
       queue_size: 1,
       frequency: 10
