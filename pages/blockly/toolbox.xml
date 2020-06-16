@@ -310,12 +310,17 @@
         </block>
     </category>
     <sep></sep>
-    <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
-    <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
+    
+    <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE">
+    </category>
+    <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE">
+    </category>
     <category id="control" name="%{BKY_CATCONTROL}" colour="%{BKY_CONTROL_HUE}">
         <block type="wait"></block>
     </category>
+    
     <sep></sep>
+    
     <category id="duckietown" name="%{BKY_CATDUCKIETOWN}" colour="%{BKY_DUCKIETOWN_HUE}">
         <block type="move">
             <value name="FORWARD_SPEED">
@@ -334,13 +339,13 @@
                 </block>
             </value>
             <data>
-        {
-          "requires" : [],
-          "provides" : [
-            "commands"
-          ]
-        }
-      </data>
+                    {
+                        "requires" : [],
+                        "provides" : [
+                            "commands"
+                            ]
+                    }
+            </data>
         </block>
         <!-- <block type="turn_left"></block><block type="turn_right"></block> -->
         <block type="forward">
@@ -350,13 +355,13 @@
                 </block>
             </value>
             <data>
-        {
-          "requires" : [],
-          "provides" : [
-            "commands"
-          ]
-        }
-      </data>
+                {
+                    "requires" : [],
+                    "provides" : [
+                        "commands"
+                    ]
+                }
+            </data>
         </block>
         <!-- <block type="backward"><value name="DURATION"><block type="math_number"><field name="NUM">2</field></block></value></block><block type="stop"><data>
         {
@@ -376,11 +381,16 @@
                 </block>
             </value>
             <data>
-        {
-          "requires" : ["supercamera"],
-          "provides" : []
-        }
-      </data>
+                {
+                "requires" : ["supercamera"],
+                "provides" : []
+                }
+            </data>
         </block>
+    </category>
+    
+    <sep></sep>
+    
+    <category id="DuckieBotBasic" name="DuckieBot Basic" colour="%{BKY_DUCKIETOWN_HUE}">
     </category>
 </xml>

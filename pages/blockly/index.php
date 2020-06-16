@@ -1,4 +1,15 @@
 <?php
+function console_log($output, $with_script_tags = true)
+{
+  $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) .
+    ');';
+  if ($with_script_tags) {
+    $js_code = '<script>' . $js_code . '</script>';
+  }
+  echo $js_code;
+} ?>
+
+<?php
 
 use \system\classes\Core;
 use \system\classes\Configuration;
@@ -9,6 +20,8 @@ $this_package = 'duckietown_blockly';
 $DEBUG = isset($_GET['debug']) && boolval($_GET['debug']);
 
 $vehicle_name = Duckiebot::getDuckiebotName();
+console_log('Observed Vehicle Name is: ' . $vehicle_name);
+
 ?>
 
 <style type="text/css">
@@ -157,6 +170,8 @@ $vehicle_name = Duckiebot::getDuckiebotName();
 ROS::connect();
 ?>
 
+
+
 <?php
 include __DIR__ . '/toolbox.xml';
 ?>
@@ -186,21 +201,21 @@ include __DIR__ . '/toolbox.xml';
   window.blockly_requires = [];
   window.blockly_provides = [];
 
-  $(document).on('<?php echo ROS::$ROSBRIDGE_CONNECTED ?>', function(evt) {
+  $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_CONNECTED) ?>', function(evt) {
     ExecutionLogicModule.set_current_status(
       ExecutionLogicModule.STATUS.COMPLETED
     );
     $('#ros_bridge_status_icon').css('color', 'green');
   });
-
-  $(document).on('<?php echo ROS::$ROSBRIDGE_ERROR ?>', function(evt, error) {
+  
+  $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_ERROR) ?>', function(evt, error) {
     ExecutionLogicModule.set_current_status(
       ExecutionLogicModule.STATUS.COMPLETED
     );
     $('#ros_bridge_status_icon').css('color', 'orangered');
   });
 
-  $(document).on('<?php echo ROS::$ROSBRIDGE_CLOSED ?>', function(evt) {
+  $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_CLOSED) ?>', function(evt) {
     ExecutionLogicModule.set_current_status(
       ExecutionLogicModule.STATUS.NOT_CONNECTED
     );
