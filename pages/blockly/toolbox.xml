@@ -8,6 +8,7 @@
         <block type="logic_null"></block>
         <block type="logic_ternary"></block>
     </category>
+
     <category name="%{BKY_CATLOOPS}" colour="%{BKY_LOOPS_HUE}">
         <block type="controls_repeat_ext">
             <value name="TIMES">
@@ -37,6 +38,7 @@
         <block type="controls_forEach"></block>
         <block type="controls_flow_statements"></block>
     </category>
+
     <category name="%{BKY_CATMATH}" colour="%{BKY_MATH_HUE}">
         <block type="math_number">
             <field name="NUM">123</field>
@@ -138,6 +140,7 @@
             </value>
         </block>
     </category>
+
     <category name="%{BKY_CATTEXT}" colour="%{BKY_TEXTS_HUE}">
         <block type="text"></block>
         <block type="text_join"></block>
@@ -215,6 +218,7 @@
             </value>
         </block>
     </category>
+
     <category name="%{BKY_CATLISTS}" colour="%{BKY_LISTS_HUE}">
         <block type="lists_create_with">
             <mutation items="0"></mutation>
@@ -266,6 +270,7 @@
         </block>
         <block type="lists_sort"></block>
     </category>
+
     <category name="%{BKY_CATCOLOUR}" colour="%{BKY_COLOUR_HUE}">
         <block type="colour_picker">
             <field name="COLOUR">#bb4040</field>
@@ -309,12 +314,13 @@
             </value>
         </block>
     </category>
+
     <sep></sep>
+
+    <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
     
-    <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE">
-    </category>
-    <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE">
-    </category>
+    <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
+    
     <category id="control" name="%{BKY_CATCONTROL}" colour="%{BKY_CONTROL_HUE}">
         <block type="wait"></block>
     </category>
@@ -388,9 +394,7 @@
             </data>
         </block>
     </category>
-    
+
     <sep></sep>
-    
-    <category id="DuckieBotBasic" name="DuckieBot Basic" colour="%{BKY_DUCKIETOWN_HUE}">
-    </category>
+    <category id="duckietown" name="%{BKY_CATDUCKIETOWN}" colour="%{BKY_DUCKIETOWN_HUE}"></category>
 </xml>
