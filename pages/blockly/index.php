@@ -28,22 +28,23 @@
 <script src="<?php echo Core::getJSscriptURL('blocks_compressed.js', $this_package) ?>"></script>
 <script src="<?php echo Core::getJSscriptURL('javascript_compressed.js', $this_package) ?>"></script>
 <script src="<?php echo Core::getJSscriptURL('blockly_msg_en.js', $this_package) ?>"></script>
+<script src="<?php echo Core::getJSscriptURL('acorn_interpreter.js', $this_package) ?>"></script>
+<script src="<?php echo Core::getJSscriptURL('custom_msg_en.js', $this_package) ?>"></script>
+
 
 <!-- Include ROS -->
 <script src="<?php echo Core::getJSscriptURL('rosdb.js', 'ros') ?>"></script>
 
 <!-- Code execution logic -->
-<script src="<?php echo Core::getJSscriptURL('execution_logic.js', $this_package) ?>"></script>
-<script src="<?php echo Core::getJSscriptURL('custom_msg_en.js', $this_package) ?>"></script>
-<script src="<?php echo Core::getJSscriptURL('acorn_interpreter.js', $this_package) ?>"></script>
+<script src="<?php echo Core::getJSscriptURL('dt_execution_logic.js', $this_package) ?>"></script>
 
 <!-- Blockly: Blocks -->
-<script src="<?php echo Core::getJSscriptURL('BLOCKS_vehicle.js', $this_package) ?>"></script>
-<script src="<?php echo Core::getJSscriptURL('BLOCKS_control.js', $this_package) ?>"></script>
+<script src="<?php echo Core::getJSscriptURL('dt_BLOCKS_vehicle.js', $this_package) ?>"></script>
+<script src="<?php echo Core::getJSscriptURL('dt_BLOCKS_control.js', $this_package) ?>"></script>
 
 <!-- Blockly: Generators -->
-<script src="<?php echo Core::getJSscriptURL('GENERATORS_vehicle.js', $this_package) ?>"></script>
-<script src="<?php echo Core::getJSscriptURL('GENERATORS_control.js', $this_package) ?>"></script>
+<script src="<?php echo Core::getJSscriptURL('dt_GENERATORS_vehicle.js', $this_package) ?>"></script>
+<script src="<?php echo Core::getJSscriptURL('dt_GENERATORS_control.js', $this_package) ?>"></script>
 
 <!--=========================================End File Import=======================================-->
 
