@@ -33,7 +33,7 @@
 
 <!-- Include ROS -->
 <script src="<?php echo Core::getJSscriptURL('rosdb.js', 'ros') ?>"></script>
-
+<script src="<?php echo Core::getJSscriptURL('roslib.min.js', 'ros') ?>"></script>
 <!-- Code execution logic -->
 <script src="<?php echo Core::getJSscriptURL('dt_execution_logic.js', $this_package) ?>"></script>
 
@@ -246,6 +246,12 @@
             messageType: 'std_msgs/String',
             queue_size: 1,
             frequency: 10
+        },
+        estop:{
+            topic_name: '/<?php echo $vehicle_name ?>/wheels_driver_node/emergency_stop',
+            messageType: 'duckietown_msgs/BoolStamped',
+            queue_size: 1,
+            frequency: 10
         }
     };
     window.blockly_requires = [];
@@ -262,7 +268,7 @@
 
     function update_ros_status(event) {
         requires = [];
-        provides = [];
+        provides = ["estop","commands"];
         window.blockly_ws.getAllBlocks().forEach(function(block) {
             if (block.hasOwnProperty('data')) {
                 data = JSON.parse(block.data);
