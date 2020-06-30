@@ -1,8 +1,5 @@
 "use strict";
 
-goog.provide("Blockly.JavaScript.duckietown");
-
-goog.require("Blockly.JavaScript");
 
 if (!Blockly.JavaScript.hasOwnProperty("__apis")) {
   Blockly.JavaScript["__apis"] = {};

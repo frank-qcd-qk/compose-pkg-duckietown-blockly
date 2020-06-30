@@ -1,8 +1,5 @@
 "use strict";
 
-goog.provide("Blockly.Blocks.duckietown");
-
-goog.require("Blockly.Blocks");
 
 Blockly.Blocks["move"] = {
   init: function () {

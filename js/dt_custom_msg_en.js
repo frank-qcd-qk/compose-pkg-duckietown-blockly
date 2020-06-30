@@ -1,8 +1,5 @@
 "use strict";
 
-goog.provide("Blockly.Msg.en");
-
-goog.require("Blockly.Msg");
 
 Blockly.Msg["CATLOGIC"] = "Logic";
 Blockly.Msg["CATLOOPS"] = "Loops";

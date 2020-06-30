@@ -27,7 +27,7 @@
 <script src="<?php echo Core::getJSscriptURL('blockly_compressed.js', $this_package) ?>"></script>
 <script src="<?php echo Core::getJSscriptURL('blocks_compressed.js', $this_package) ?>"></script>
 <script src="<?php echo Core::getJSscriptURL('javascript_compressed.js', $this_package) ?>"></script>
-<script src="<?php echo Core::getJSscriptURL('en.js', $this_package) ?>"></script>
+<script src="<?php echo Core::getJSscriptURL('blockly_messages.js', $this_package) ?>"></script>
 <script src="<?php echo Core::getJSscriptURL('acorn_interpreter.js', $this_package) ?>"></script>
 
 

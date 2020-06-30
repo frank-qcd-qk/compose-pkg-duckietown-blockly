@@ -1,8 +1,5 @@
 "use strict";
 
-goog.provide("Blockly.Blocks.control");
-
-goog.require("Blockly.Blocks");
 
 Blockly.Blocks["wait"] = {
   init: function () {
