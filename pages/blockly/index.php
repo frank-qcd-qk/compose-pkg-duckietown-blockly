@@ -87,7 +87,7 @@
         </td>
         <td style="min-width:160px">
             <?php
-            //            include_once "components/take_over.php";
+            include_once "components/take_over.php";
             ?>
         </td>
         <td style="width:100%">

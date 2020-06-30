@@ -1,10 +1,6 @@
 <?php
-
-use \system\classes\Core;
-use \system\classes\Configuration;
-use \system\classes\Database;
-use \system\packages\ros\ROS;
 use \system\packages\duckietown_duckiebot\Duckiebot;
+use \system\packages\ros\ROS;
 ?>
 
 <span style="float: right; font-size: 12pt">Take over&nbsp;
@@ -61,8 +57,7 @@ $omega_gain *= $sensitivity;
   function publish_command() {
     if (window.mission_control_Mode != 'manual')
       return;
-    if (window.mission_control_cmdVel == undefined)
-      return;
+
     keys = window.mission_control_Keys;
     key_map = window.mission_control_keyMap;
     // compute linear/angular speeds
@@ -77,19 +72,12 @@ $omega_gain *= $sensitivity;
     });
     // publish message
     console.log(car_cmd);
-    window.mission_control_cmdVel.publish(car_cmd);
+    window.ROSDB.publish('commands',car_cmd)
   } //publish_command
 
   // publish command at regular rate
   $(document).on('<?php echo ROS::get_event(ROS::$ROSBRIDGE_CONNECTED) ?>', function(e) {
-    // define the output topic
-    window.mission_control_cmdVel = new ROSLIB.Topic({
-      ros: window.ros,
-      name: '/<?php echo $vehicle_name ?>/joy_mapper_node/car_cmd',
-      messageType: 'duckietown_msgs/Twist2DStamped',
-      queue_size: 1
-    });
-    console.log(window.mission_control_cmdVel)
+
     // attach listeners to key events
     window.addEventListener("keyup", key_cb, false);
     window.addEventListener("keydown", key_cb, false);
