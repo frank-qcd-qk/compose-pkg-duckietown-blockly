@@ -1,26 +1,27 @@
 <!--========================================Logger===========================================-->
-<?php function console_log($output, $with_script_tags = true){
+<?php function console_log($output, $with_script_tags = true)
+{
     $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) .
         ');';
     if ($with_script_tags) {
         $js_code = '<script>' . $js_code . '</script>';
     }
     echo $js_code;
-} ?>
+}?>
 <!--=========================================END Logger======================================-->
 
 <!--=====================================File Import=========================================-->
 <?php
-    $this_package = 'duckietown_blockly';
+$this_package = 'duckietown_blockly';
 
-    use \system\classes\Core;
-    use \system\classes\Configuration;
-    use \system\packages\ros\ROS;
-    use \system\packages\duckietown_duckiebot\Duckiebot;
+use \system\classes\Configuration;
+use \system\classes\Core;
+use \system\packages\duckietown_duckiebot\Duckiebot;
+use \system\packages\ros\ROS;
 
-    include __DIR__ . '/toolbox.xml';
+include __DIR__ . '/toolbox.xml';
 
-    $DEBUG = isset($_GET['debug']) && boolval($_GET['debug']);
+$DEBUG = isset($_GET['debug']) && boolval($_GET['debug']);
 ?>
 
 <!-- Include Blocky -->
@@ -51,8 +52,8 @@
 <!--=============================Start Page Configuration!=========================================-->
 <style>
     <?php
-    include 'CSS/main.css';
-    ?>
+include 'CSS/main.css';
+?>
 </style>
 <table style="width:100%"> <!--Header Buttons-->
     <tr>
@@ -87,30 +88,15 @@
         </td>
         <td style="min-width:160px">
             <?php
-            include_once "components/take_over.php";
+                include_once "components/take_over.php";
             ?>
         </td>
-        <td style="width:100%">
-            <div class="panel panel-default" style="margin:20px 0 20px 40px; min-width:100px; float:right">
-                <div class="panel-heading" role="tab" style="height:34px; padding-top: 6px;">
-                    <table>
-                        <tr>
-                            <td>
-                                <strong>
-                                    <span class="glyphicon glyphicon-th" id="ros_bridge_status_icon" aria-hidden="true" style="color:red"></span>
-                                    &nbsp;
-                                    ROS:
-                                    &nbsp;
-                                </strong>
-                            </td>
-                            <td id="ros_topic_status_container">(empty)</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+        <td class="text-center" style="width:40%; padding-top:10px">
+            <i class="fa fa-toggle-on" aria-hidden="true"></i> Mode:
+            <strong id="vehicle_driving_mode_status">ESTOPPED!</strong>
         </td>
-    </tr>
 
+    </tr>
     <tr>
         <td colspan="3">
             <div id="wrapper">
@@ -121,12 +107,33 @@
             <div id="blocklyDiv" style="position: absolute"></div>
         </td>
     </tr>
-    <!-- <tr>
+    <tr>
+        <td style="width:100%">
+                <div class="panel panel-default" style="float:left">
+                    <div class="panel-heading" role="tab" style="height:34px; padding-top: 6px; resize: auto">
+                        <table>
+                            <tr>
+                                <td>
+                                    <strong>
+                                        <span class="glyphicon glyphicon-th" id="ros_bridge_status_icon" aria-hidden="true" style="color:red"></span>
+                                        &nbsp;
+                                        ROS:
+                                        &nbsp;
+                                    </strong>
+                                </td>
+                                <td id="ros_topic_status_container">(empty)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+        </td>
+    </tr>
+    <tr>
       <td style="padding-top:6px">
       <p style="margin:0">Execution Log:</p>
-      <textarea id="log_area" style="width:100%; height:9vh; resize:none" readonly></textarea>
+      <textarea id="log_area" style="width:100%; height:9vh; resize:auto" readonly></textarea>
       </td>
-    </tr> -->
+    </tr>
 
 </table>
 <script type="text/javascript"> //! Blockly Inject
@@ -191,14 +198,14 @@
 
 <!--====================================ROS Happy Sauce!============================================-->
 <?php //! Robot Initialization
-    $vehicle_name = Duckiebot::getDuckiebotName();
-    if (ip2long($vehicle_name) == true or $vehicle_name == "localhost") {
-        console_log("[FATAL] Your Duckiebot Name seems to be an ip!");
-        throw new Exception("Vehicle IP obtained wrongly!");
-    }
-    ROS::connect();
-    console_log("[DEBUG] Obatined Duckiebot is: " . $vehicle_name);
-    console_log("[INFO] Is ROS Initialized? " . (ROS::isInitialized() ? 'Yes' : 'NO!'))
+$vehicle_name = Duckiebot::getDuckiebotName();
+if (ip2long($vehicle_name) == true or $vehicle_name == "localhost") {
+    console_log("[FATAL] Your Duckiebot Name seems to be an ip!");
+    throw new Exception("Vehicle IP obtained wrongly!");
+}
+ROS::connect();
+console_log("[DEBUG] Obatined Duckiebot is: " . $vehicle_name);
+console_log("[INFO] Is ROS Initialized? " . (ROS::isInitialized() ? 'Yes' : 'NO!'))
 ?>
 
 <script type="text/javascript"> //! Set the ROS Bridge Status Indicator!
@@ -314,27 +321,45 @@
                 window.ros_resources[to_advertise[i]]['queue_size']
             );
         }
+        // simplified connection indicator:
+        if (requires.length!=0){
+            $('#ros_topic_status_container').html(
+                $('#ros_topic_status_container').html() +
+                data_status_template.format(
+                    'down',requires.length
+                )
+            );
+        }
+        if (provides.length!=0){
+            $('#ros_topic_status_container').html(
+                $('#ros_topic_status_container').html() +
+                data_status_template.format(
+                    'up','x'+provides.length
+                )
+            );
+        }
+        //TODO: Fix for a better way of illustration resource usage!
         // ---
-        for (var i in requires) {
-            $('#ros_topic_status_container').html(
-                $('#ros_topic_status_container').html() +
-                data_status_template.format(
-                    'down',
-                    requires[i].charAt(0).toUpperCase() + requires[i].slice(1),
-                    requires[i]
-                )
-            );
-        }
-        for (var i in provides) {
-            $('#ros_topic_status_container').html(
-                $('#ros_topic_status_container').html() +
-                data_status_template.format(
-                    'up',
-                    provides[i].charAt(0).toUpperCase() + provides[i].slice(1),
-                    provides[i]
-                )
-            );
-        }
+        // for (var i in requires) {
+        //     $('#ros_topic_status_container').html(
+        //         $('#ros_topic_status_container').html() +
+        //         data_status_template.format(
+        //             'down',
+        //             requires[i].charAt(0).toUpperCase() + requires[i].slice(1),
+        //             requires[i]
+        //         )
+        //     );
+        // }
+        // for (var i in provides) {
+        //     $('#ros_topic_status_container').html(
+        //         $('#ros_topic_status_container').html() +
+        //         data_status_template.format(
+        //             'up',
+        //             provides[i].charAt(0).toUpperCase() + provides[i].slice(1),
+        //             provides[i]
+        //         )
+        //     );
+        // }
         // ---
         if ((requires.length + provides.length) == 0) {
             $('#ros_topic_status_container').html('(empty)');
@@ -382,7 +407,7 @@
 
         setInterval(update_data_status, 100);
     });
-    
+
     function restorelocal() {
         var xml_text = localStorage.getItem("blocks_cache");
         try {
@@ -417,7 +442,7 @@
 
 <!--===================================Debugger========================================================-->
 <?php
-    if ($DEBUG) {
+if ($DEBUG) {
     ?>
         <br />
         <textarea id="debug_code_textarea" style="width:100%; height:24vh; resize:none" readonly></textarea>
@@ -430,7 +455,7 @@
             window.blockly_ws.addChangeListener(show_code);
         </script>
     <?php
-    }
-    require_once $GLOBALS['__EMBEDDED__PACKAGES__DIR__'] . '/core/modules/modals/yes_no_modal.php';
+}
+require_once $GLOBALS['__EMBEDDED__PACKAGES__DIR__'] . '/core/modules/modals/yes_no_modal.php';
 ?>
 <!--===================================END Debugger====================================================-->

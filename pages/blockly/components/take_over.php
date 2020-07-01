@@ -33,6 +33,7 @@ $omega_gain *= $sensitivity;
         window.ROSDB.publish('estop',{data:true})
         window.ROSDB.publish('estop',{data:true})
         $('body').css('background-image', 'linear-gradient(to top, #F7F7F6, #ff0000, #F7F7F6)');
+        $('#vehicle_driving_mode_status').html('ESTOPPED!');
         return;
       }
       window.estopSet = false; //switch off estop off
@@ -42,8 +43,10 @@ $omega_gain *= $sensitivity;
       on = false;
       if (window.mission_control_Mode =='manual'){
         $('body').css('background-image', 'linear-gradient(to top, #F7F7F6, #FFC800, #F7F7F6)');
+        $('#vehicle_driving_mode_status').html('Manual');
       }else{
         $('body').css('background-image', 'linear-gradient(to top, #F7F7F6, #00ff00, #F7F7F6)');
+        $('#vehicle_driving_mode_status').html('Auto');
       }
     }
   }();
@@ -141,7 +144,7 @@ $omega_gain *= $sensitivity;
     }else {
       if (window.estopSet!=true){
         $('body').css('background-image', 'linear-gradient(to top, #F7F7F6, #00ff00, #F7F7F6)');
-        $('#vehicle_driving_mode_status').html('autonomous');
+        $('#vehicle_driving_mode_status').html('Auto');
       }else{
         $('body').css('background-image', 'linear-gradient(to top, #F7F7F6, #ff0000, #F7F7F6)');
         $('#vehicle_driving_mode_status').html('ESTOPPED!');
