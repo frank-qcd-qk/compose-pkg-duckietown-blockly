@@ -1,6 +1,6 @@
 <?php
-use \system\packages\duckietown_duckiebot\Duckiebot;
-use \system\packages\ros\ROS;
+  use \system\packages\duckietown_duckiebot\Duckiebot;
+  use \system\packages\ros\ROS;
 ?>
 
 <span style="float: right; font-size: 12pt">Take over&nbsp;
@@ -8,19 +8,80 @@ use \system\packages\ros\ROS;
 </span>
 
 <?php
-// TODO: get these from ROS param
-$v_gain = 0.5;
-$omega_gain = 8.3;
-$sensitivity = 0.5;
-$output_commands_hz = 10.0;
-$vehicle_name = Duckiebot::getDuckiebotName();
+  // TODO: get these from ROS param
+  $v_gain = 0.5;
+  $omega_gain = 8.3;
+  $sensitivity = 0.5;
+  $output_commands_hz = 10.0;
+  $vehicle_name = Duckiebot::getDuckiebotName();
 
-// apply sensitivity
-$omega_gain *= $sensitivity;
-
+  // apply sensitivity
+  $omega_gain *= $sensitivity;
+  ROS::connect();
+  console_log("[DEBUG] Obatined Duckiebot is: " . $vehicle_name);
+  console_log("[INFO] Is ROS Initialized? " . (ROS::isInitialized() ? 'Yes' : 'NO!'))
 ?>
 
+
 <script type="text/javascript">
+  //! Setup ROS resource for non blockly page. Comment this section out for blockly
+  console.log("[INFO] Is ROS Initialized? " . (ROS::isInitialized() ? 'Yes' : 'NO!'))
+  function to_update_ros_status(event) {
+        window.to_ros_resources = {
+          to_estop: {
+            topic_name: '/<?php echo $vehicle_name ?>/wheels_driver_node/emergency_stop',
+            messageType: 'duckietown_msgs/BoolStamped',
+            queue_size: 1,
+            frequency: 10
+          },
+          to_commands: {
+            topic_name: '/<?php echo $vehicle_name ?>/joy_mapper_node/car_cmd',
+            messageType: 'duckietown_msgs/Twist2DStamped',
+            queue_size: 1,
+            frequency: 10
+          }
+        };
+        to_advertise = ["to_estop","to_commands"];
+        for (var i in to_advertise) {
+            window.ROSDB.advertise(
+                to_advertise[i],
+                window.to_ros_resources[to_advertise[i]]['topic_name'],
+                window.to_ros_resources[to_advertise[i]]['messageType'],
+                window.to_ros_resources[to_advertise[i]]['frequency'],
+                window.to_ros_resources[to_advertise[i]]['queue_size']
+            );
+        }
+        window.to_blockly_provides = provides;
+    } //update_ros_status
+
+  function to_update_data_status() {
+      resources_list = [
+          window.to_blockly_provides
+      ];
+      hz_0_colors = [
+          'red',
+          'black'
+      ];
+      for (var j in resources_list) {
+          var resources = resources_list[j];
+          var color = hz_0_colors[j];
+          for (var i in resources) {
+              var resource_name = resources[i];
+              var expected_hz = window.ros_resources[resource_name]['frequency'];
+              var elem = $('#{0}-data-source-status'.format(resource_name));
+              var hz = window.ROSDB.hz(resource_name);
+              if (hz >= 0.6 * expected_hz)
+                  color = 'green';
+              if (hz > 0.4 * expected_hz && hz < 0.6 * expected_hz)
+                  color = 'orange';
+              elem.css('color', color);
+              elem.prop('title', '{0} Hz'.format(hz.toFixed(2)));
+          }
+      }
+  } //update_data_status
+  to_update_ros_status()
+  setInterval(to_update_data_status, 100);
+
   // estop toggle switch control
   window.estopSet = true;
   var toggleEstop = function(){
@@ -91,7 +152,6 @@ $omega_gain *= $sensitivity;
     if (window.mission_control_Mode != 'manual')
       return;
     //TODO: Check for estop:
-    console.log("Current Estop: "+window.estopSet)
     keys = window.mission_control_Keys;
     key_map = window.mission_control_keyMap;
     // compute linear/angular speeds
@@ -104,8 +164,6 @@ $omega_gain *= $sensitivity;
       v: v_val * v_gain,
       omega: omega_val * omega_gain
     });
-    // publish message
-    console.log(car_cmd);
     window.ROSDB.publish('commands',car_cmd)
   } //publish_command
 
@@ -142,6 +200,11 @@ $omega_gain *= $sensitivity;
         window.mission_control_Mode = 'manual';
       }
     }else {
+      window.ROSDB.publish('estop',{data:true});
+      window.ROSDB.publish('estop',{data:true});
+      window.ROSDB.publish('estop',{data:true});
+      window.mission_control_Mode = 'ESTOPPED!';
+      window.estopSet=true;
       if (window.estopSet!=true){
         $('body').css('background-image', 'linear-gradient(to top, #F7F7F6, #00ff00, #F7F7F6)');
         $('#vehicle_driving_mode_status').html('Auto');

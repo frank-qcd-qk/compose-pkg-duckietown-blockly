@@ -1,6 +1,5 @@
 <!--========================================Logger===========================================-->
-<?php function console_log($output, $with_script_tags = true)
-{
+<?php function console_log($output, $with_script_tags = true){
     $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) .
         ');';
     if ($with_script_tags) {
@@ -12,16 +11,16 @@
 
 <!--=====================================File Import=========================================-->
 <?php
-$this_package = 'duckietown_blockly';
+    $this_package = 'duckietown_blockly';
 
-use \system\classes\Configuration;
-use \system\classes\Core;
-use \system\packages\duckietown_duckiebot\Duckiebot;
-use \system\packages\ros\ROS;
+    use \system\classes\Configuration;
+    use \system\classes\Core;
+    use \system\packages\duckietown_duckiebot\Duckiebot;
+    use \system\packages\ros\ROS;
 
-include __DIR__ . '/toolbox.xml';
+    include __DIR__ . '/toolbox.xml';
 
-$DEBUG = isset($_GET['debug']) && boolval($_GET['debug']);
+    $DEBUG = isset($_GET['debug']) && boolval($_GET['debug']);
 ?>
 
 <!-- Include Blocky -->
@@ -49,163 +48,17 @@ $DEBUG = isset($_GET['debug']) && boolval($_GET['debug']);
 
 <!--=========================================End File Import=======================================-->
 
-<!--=============================Start Page Configuration!=========================================-->
-<style>
-    <?php
-include 'CSS/main.css';
-?>
-</style>
-<table style="width:100%"> <!--Header Buttons-->
-    <tr>
-        <td style="width:500px; min-width:500px; max-width:500px">
-            <div class="btn-group btn-group-justified" role="group" style="margin:20px 0">
-                <a role="button" class="btn btn-default" id="launch_button" name="launch_button" onclick="ExecutionLogicModule.toggle_run();">
-                    <i id="launch_button_icon" class="fa fa-spinner" aria-hidden="true"></i>
-                    &nbsp;
-                    <span id="launch_button_span">Connecting...</span>
-                </a>
-                <a role="button" class="btn btn-danger" id="end_button" name="end_button" href="#" onclick='ExecutionLogicModule.end_execution();' style="display:none;">
-                    <i class="fa fa-stop" aria-hidden="true"></i>
-                    &nbsp;
-                    Stop
-                </a>
-                <a role="button" class="btn btn-default" id="load_from_file_button" name="load_from_file_button" href="#" onclick='ExecutionLogicModule.load_from_file();'>
-                    <i class="fa fa-download" aria-hidden="true"></i>
-                    &nbsp;
-                    Load code
-                </a>
-                <a role="button" class="btn btn-default" id="save_to_file_button" name="save_to_file_button" href="#" onclick='ExecutionLogicModule.save_to_file();'>
-                    <i class="fa fa-upload" aria-hidden="true"></i>
-                    &nbsp;
-                    Save code
-                </a>
-                <a role="button" class="btn btn-warning" id="clean_ws_button" name="clean_ws_button" href="#" onclick='clean_ws();'>
-                    <i class="fa fa-eraser" aria-hidden="true"></i>
-                    &nbsp;
-                    Clean
-                </a>
-            </div>
-        </td>
-        <td style="min-width:160px">
-            <?php
-                include_once "components/take_over.php";
-            ?>
-        </td>
-        <td class="text-center" style="width:40%; padding-top:10px">
-            <i class="fa fa-toggle-on" aria-hidden="true"></i> Mode:
-            <strong id="vehicle_driving_mode_status">ESTOPPED!</strong>
-        </td>
-
-    </tr>
-    <tr>
-        <td colspan="3">
-            <div id="wrapper">
-                <div id="page-wrapper">
-                    <div id="blocklyArea" style="height:58vh;"></div>
-                </div>
-            </div>
-            <div id="blocklyDiv" style="position: absolute"></div>
-        </td>
-    </tr>
-    <tr>
-        <td style="width:100%">
-                <div class="panel panel-default" style="float:left">
-                    <div class="panel-heading" role="tab" style="height:34px; padding-top: 6px; resize: auto">
-                        <table>
-                            <tr>
-                                <td>
-                                    <strong>
-                                        <span class="glyphicon glyphicon-th" id="ros_bridge_status_icon" aria-hidden="true" style="color:red"></span>
-                                        &nbsp;
-                                        ROS:
-                                        &nbsp;
-                                    </strong>
-                                </td>
-                                <td id="ros_topic_status_container">(empty)</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-        </td>
-    </tr>
-    <tr>
-      <td style="padding-top:6px">
-      <p style="margin:0">Execution Log:</p>
-      <textarea id="log_area" style="width:100%; height:9vh; resize:auto" readonly></textarea>
-      </td>
-    </tr>
-
-</table>
-<script type="text/javascript"> //! Blockly Inject
-    var blocklyArea = document.getElementById('blocklyArea');
-    var blocklyDiv = document.getElementById('blocklyDiv');
-    window.blockly_ws = Blockly.inject(
-        blocklyDiv, {
-            toolbox: document.getElementById('toolbox'),
-            scrollbars: true,
-            rtl: false,
-            zoom: {
-                enabled: true,
-                controls: true,
-                wheel: true,
-                startScale: 0.9,
-                maxScale: 2.5,
-                minScale: 0.5,
-                scaleSpeed: 1.1
-            },
-            grid: {
-                spacing: 25,
-                length: 3,
-                colour: '#ccc',
-                snap: false
-            },
-            trashcan: true,
-            media: '<?php echo Configuration::$BASE ?>/data/<?php echo $this_package ?>/media/'
-        }
-    );
-    var onresize = function(e) {
-        // Compute the absolute coordinates and dimensions of blocklyArea.
-        var element = blocklyArea;
-        var x = 0;
-        var y = 0;
-        do {
-            x += element.offsetLeft;
-            y += element.offsetTop;
-            element = element.offsetParent;
-        } while (element);
-        // Position blocklyDiv over blocklyArea.
-        blocklyDiv.style.left = x + 'px';
-        blocklyDiv.style.top = y + 'px';
-        blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
-        blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
-        Blockly.svgResize(window.blockly_ws);
-    };
-
-    window.addEventListener('resize', onresize, false);
-    onresize();
-    Blockly.svgResize(window.blockly_ws);
-</script>
-<script type="text/javascript"> //! Clean Workspace Button
-    function clean_ws() {
-        openYesNoModal(
-            'Are you sure you want to clean the workspace?<br/>All unsaved progress will be lost.',
-            ExecutionLogicModule.clean_ws,
-            true /*silentMode*/
-        );
-    } //clean_ws
-</script>
-<!--==============================End Page Configuration!===========================================-->
 
 <!--====================================ROS Happy Sauce!============================================-->
 <?php //! Robot Initialization
-$vehicle_name = Duckiebot::getDuckiebotName();
-if (ip2long($vehicle_name) == true or $vehicle_name == "localhost") {
-    console_log("[FATAL] Your Duckiebot Name seems to be an ip!");
-    throw new Exception("Vehicle IP obtained wrongly!");
-}
-ROS::connect();
-console_log("[DEBUG] Obatined Duckiebot is: " . $vehicle_name);
-console_log("[INFO] Is ROS Initialized? " . (ROS::isInitialized() ? 'Yes' : 'NO!'))
+    $vehicle_name = Duckiebot::getDuckiebotName();
+    if (ip2long($vehicle_name) == true or $vehicle_name == "localhost") {
+        console_log("[FATAL] Your Duckiebot Name seems to be an ip!");
+        throw new Exception("Vehicle IP obtained wrongly!");
+    }
+    ROS::connect();
+    console_log("[DEBUG] Obatined Duckiebot is: " . $vehicle_name);
+    console_log("[INFO] Is ROS Initialized? " . (ROS::isInitialized() ? 'Yes' : 'NO!'))
 ?>
 
 <script type="text/javascript"> //! Set the ROS Bridge Status Indicator!
@@ -439,6 +292,153 @@ console_log("[INFO] Is ROS Initialized? " . (ROS::isInitialized() ? 'Yes' : 'NO!
         var xml_text_stored = localStorage.getItem("blocks_cache");
     } //localstorage
 </script>
+<!--=========================================End ROS Happy Sauce!==================================-->
+
+<!--=============================Start Page Configuration!=========================================-->
+<style>
+    <?php include 'CSS/main.css'; ?>
+</style>
+<table style="width:100%"> <!--Header Buttons-->
+    <tr>
+        <td style="width:500px; min-width:500px; max-width:500px">
+            <div class="btn-group btn-group-justified" role="group" style="margin:20px 0">
+                <a role="button" class="btn btn-default" id="launch_button" name="launch_button" onclick="ExecutionLogicModule.toggle_run();">
+                    <i id="launch_button_icon" class="fa fa-spinner" aria-hidden="true"></i>
+                    &nbsp;
+                    <span id="launch_button_span">Connecting...</span>
+                </a>
+                <a role="button" class="btn btn-danger" id="end_button" name="end_button" href="#" onclick='ExecutionLogicModule.end_execution();' style="display:none;">
+                    <i class="fa fa-stop" aria-hidden="true"></i>
+                    &nbsp;
+                    Stop
+                </a>
+                <a role="button" class="btn btn-default" id="load_from_file_button" name="load_from_file_button" href="#" onclick='ExecutionLogicModule.load_from_file();'>
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                    &nbsp;
+                    Load code
+                </a>
+                <a role="button" class="btn btn-default" id="save_to_file_button" name="save_to_file_button" href="#" onclick='ExecutionLogicModule.save_to_file();'>
+                    <i class="fa fa-upload" aria-hidden="true"></i>
+                    &nbsp;
+                    Save code
+                </a>
+                <a role="button" class="btn btn-warning" id="clean_ws_button" name="clean_ws_button" href="#" onclick='clean_ws();'>
+                    <i class="fa fa-eraser" aria-hidden="true"></i>
+                    &nbsp;
+                    Clean
+                </a>
+            </div>
+        </td>
+        <td style="min-width:160px">
+            <?php
+                include_once "components/take_over.php";
+            ?>
+        </td>
+        <td class="text-center" style="width:40%; padding-top:10px">
+            <i class="fa fa-toggle-on" aria-hidden="true"></i> Mode:
+            <strong id="vehicle_driving_mode_status">ESTOPPED!</strong>
+        </td>
+
+    </tr>
+    <tr>
+        <td colspan="3">
+            <div id="wrapper">
+                <div id="page-wrapper">
+                    <div id="blocklyArea" style="height:58vh;"></div>
+                </div>
+            </div>
+            <div id="blocklyDiv" style="position: absolute"></div>
+        </td>
+    </tr>
+    <tr>
+        <td style="width:100%">
+                <div class="panel panel-default" style="float:left">
+                    <div class="panel-heading" role="tab" style="height:34px; padding-top: 6px; resize: auto">
+                        <table>
+                            <tr>
+                                <td>
+                                    <strong>
+                                        <span class="glyphicon glyphicon-th" id="ros_bridge_status_icon" aria-hidden="true" style="color:red"></span>
+                                        &nbsp;
+                                        ROS:
+                                        &nbsp;
+                                    </strong>
+                                </td>
+                                <td id="ros_topic_status_container">(empty)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+        </td>
+    </tr>
+    <tr>
+      <td style="padding-top:6px">
+      <p style="margin:0">Execution Log:</p>
+      <textarea id="log_area" style="width:100%; height:9vh; resize:auto" readonly></textarea>
+      </td>
+    </tr>
+
+</table>
+<script type="text/javascript"> //! Blockly Inject
+    var blocklyArea = document.getElementById('blocklyArea');
+    var blocklyDiv = document.getElementById('blocklyDiv');
+    window.blockly_ws = Blockly.inject(
+        blocklyDiv, {
+            toolbox: document.getElementById('toolbox'),
+            scrollbars: true,
+            rtl: false,
+            zoom: {
+                enabled: true,
+                controls: true,
+                wheel: true,
+                startScale: 0.9,
+                maxScale: 2.5,
+                minScale: 0.5,
+                scaleSpeed: 1.1
+            },
+            grid: {
+                spacing: 25,
+                length: 3,
+                colour: '#ccc',
+                snap: false
+            },
+            trashcan: true,
+            media: '<?php echo Configuration::$BASE ?>/data/<?php echo $this_package ?>/media/'
+        }
+    );
+    var onresize = function(e) {
+        // Compute the absolute coordinates and dimensions of blocklyArea.
+        var element = blocklyArea;
+        var x = 0;
+        var y = 0;
+        do {
+            x += element.offsetLeft;
+            y += element.offsetTop;
+            element = element.offsetParent;
+        } while (element);
+        // Position blocklyDiv over blocklyArea.
+        blocklyDiv.style.left = x + 'px';
+        blocklyDiv.style.top = y + 'px';
+        blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+        blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+        Blockly.svgResize(window.blockly_ws);
+    };
+
+    window.addEventListener('resize', onresize, false);
+    onresize();
+    Blockly.svgResize(window.blockly_ws);
+</script>
+<script type="text/javascript"> //! Clean Workspace Button
+    function clean_ws() {
+        openYesNoModal(
+            'Are you sure you want to clean the workspace?<br/>All unsaved progress will be lost.',
+            ExecutionLogicModule.clean_ws,
+            true /*silentMode*/
+        );
+    } //clean_ws
+</script>
+<!--==============================End Page Configuration!===========================================-->
+
 
 <!--===================================Debugger========================================================-->
 <?php
